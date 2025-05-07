@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+United Eyewear - Invoice Records</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" 
+            integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" 
+            crossorigin="anonymous" 
+            referrerpolicy="no-referrer"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .search-bar input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .search-bar button {
+            padding: 10px 15px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .invoice-card {
+            border: 1px solid #e0e0e0;
+            margin-bottom: 30px;
+            background: white;
+            position: relative;
+            page-break-after: always;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .invoice-content {
+            padding: 20px;
+        }
+        .company-header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+            color: rgb(255, 255, 255);
+            padding: 15px;
+            border-radius: 5px 5px 0 0;
+            position: relative;
+        }
+        .logo-placeholder {
+            width: 80px;
+            height: 80px;
+            background-color: white;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2a5298;
+            font-weight: bold;
+            border: 3px solid white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .company-name {
+            font-weight: bold;
+            font-size: 22px;
+            margin-bottom: 5px;
+           
+        }
+        .arabic-text {
+            text-align: right;
+            direction: rtl;
+            font-family: 'Traditional Arabic', Arial, sans-serif;
+            font-size: 16px;
+            color: #333;
+        }
+        .divider {
+            border-top: 2px solid #2a5298;
+            margin: 15px 0;
+        }
+        .receipt-title {
+            text-align: center;
+            font-weight: bold;
+            margin: 15px 0;
+            color: #2a5298;
+            font-size: 18px;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .receipt-table td {
+            padding: 8px 5px;
+            border: none;
+        }
+        .receipt-table .label {
+            font-weight: bold;
+            width: 40%;
+            color: #555;
+        }
+        .dashed-line {
+            border-top: 1px dashed #aaa;
+            margin: 15px 0;
+        }
+        .footer {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        .signature-section {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+        }
+        .signature-box {
+            text-align: center;
+            width: 45%;
+        }
+        .signature-line {
+            border-top: 1px solid #000;
+            margin-top: 50px;
+            width: 100%;
+        }
+        .highlight-box {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+            border-left: 4px solid #2a5298;
+        }
+        .invoice-actions {
+            text-align: center;
+            margin-top: 15px;
+        }
+        .print-btn {
+            background: #2a5298;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .print-btn:hover {
+            background: #1e3c72;
+        }
+        .pdf-btn {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .pdf-btn:hover {
+            background: #c0392b;
+        }
+        @media print {
+            .search-bar, .invoice-actions {
+                display: none;
+            }
+            .invoice-card {
+                border: none;
+                box-shadow: none;
+                margin-bottom: 0;
+            }
+            body {
+                padding: 0;
+                background: none;
+            }
+            .company-header {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+        /* Thermal printer specific styles */
+        @media print and (max-width: 80mm) {
+            body {
+                font-size: 12px !important;
+                width: 80mm !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .container {
+                width: 100% !important;
+                max-width: 80mm !important;
+                padding: 5px !important;
+                box-shadow: none !important;
+            }
+            .company-header {
+                padding: 5px !important;
+                background: none !important;
+                color: black !important;
+                flex-direction: column !important;
+            }
+            .english-text, .arabic-text {
+                width: 100% !important;
+                text-align: center !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .arabic-text {
+                direction: rtl;
+            }
+            .logo-placeholder {
+                width: 50px !important;
+                height: 50px !important;
+                margin: 5px auto !important;
+            }
+            .logo-placeholder img {
+                height: 40px !important;
+            }
+            .company-name {
+                font-size: 14px !important;
+            }
+            .receipt-title {
+                font-size: 14px !important;
+                margin: 5px 0 !important;
+            }
+            .receipt-table td {
+                padding: 2px 0 !important;
+                font-size: 11px !important;
+            }
+            .highlight-box {
+                padding: 5px !important;
+                margin: 5px 0 !important;
+                background: none !important;
+                border-left: none !important;
+            }
+            .divider, .dashed-line {
+                margin: 5px 0 !important;
+            }
+            .signature-section {
+                margin-top: 15px !important;
+                flex-direction: column !important;
+            }
+            .signature-box {
+                width: 100% !important;
+                margin-bottom: 10px !important;
+            }
+            .signature-line {
+                margin-top: 20px !important;
+            }
+            .footer {
+                font-size: 10px !important;
+                margin-top: 10px !important;
+                padding-top: 5px !important;
+            }
+            /* Force black and white printing */
+            * {
+                color: black !important;
+                background: transparent !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        #sticky-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: #3f51b5;
+  color: white;
+  z-index: 1001;
+  padding: 5px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  transition: top 0.4s;
+}
+
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1000px;
+  margin: auto;
+}
+
+#sticky-header nav a {
+  color: white;
+  margin-left: 20px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+#sticky-header nav a:hover {
+  color: #ffcf5e;
+
+}
+
+.data-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.data-actions button {
+    padding: 10px 15px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.3s;
+    white-space: nowrap;
+}
+
+.backup-btn {
+    background: #27ae60;
+}
+
+.backup-btn:hover {
+    background: #219653;
+}
+
+.restore-btn {
+    background: #e67e22;
+}
+
+.restore-btn:hover {
+    background: #d35400;
+}
+
+    </style>
+</head>
+<body>
+
+    <header id="sticky-header">
+        <div class="header-content">
+          <h1><i class="fas fa-archive"></i> Saved Receipt</h1>
+          <nav>
+            <a href="index.html"><i class="fas fa-home"></i> Home</a>
+            <a href="invoice.html"><i class="fas fa-pencil-alt"></i> Quick Invoice</a>
+            <a href="saved-inv.html"><i class="fas fa-sync-alt"></i> saved Inv.</a>
+            <a href="membership.html"><i class="fas fa-users"></i> Members</a>
+        </nav>
+        </div>
+      </header><br><br><br><br><br>
+      
+      <script>
+        let lastScrollTop = 0;
+        const header = document.getElementById("sticky-header");
+      
+        window.addEventListener("scroll", function () {
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+          if (scrollTop > lastScrollTop) {
+            // Scrolling down
+            header.style.top = "-100px";
+          } else {
+            // Scrolling up
+            header.style.top = "0";
+          }
+      
+          lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // Avoid negative values
+        }, false);
+      </script>
+
+
+    <div class="container">
+        <div class="header">
+            <h2 style="color: #2a5298;">
+United Eyewear <br> Invoice Records</h2>
+            <p style="color: #666;">View and manage all customer receipts</p>
+        </div>
+
+
+        <div class="data-actions" style="display: none;">
+            <button onclick="backupData()" class="backup-btn">
+                <i class="fas fa-download"></i> Backup Data
+            </button>
+            <button onclick="document.getElementById('restore-file').click()" class="restore-btn">
+                <i class="fas fa-upload"></i> Restore Data
+            </button>
+            <input type="file" id="restore-file" accept=".json" style="display: none;" onchange="restoreData(this)">
+        </div>
+   
+
+        <div class="search-bar">
+            <input type="text" id="search-input" placeholder="Search by receipt no, customer name or phone..." onkeyup="searchInvoices()">
+            <button onclick="searchInvoices()">Search</button>
+        </div>
+
+        <div id="invoices-container">
+            <!-- Invoices will be loaded here -->
+        </div>
+    </div>
+
+    <script>
+        // Include html2pdf library
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.integrity = 'sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==';
+        script.crossOrigin = 'anonymous';
+        script.referrerPolicy = 'no-referrer';
+        document.head.appendChild(script);
+
+        function backupData() {
+            // Get all data from localStorage
+            const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices')) || [];
+            const stockItems = JSON.parse(localStorage.getItem('stockItems')) || [];
+            const customers = JSON.parse(localStorage.getItem('customers')) || [];
+            const settings = JSON.parse(localStorage.getItem('settings')) || {};
+            
+            // Create a backup object with all data
+            const backup = {
+                savedInvoices,
+                stockItems,
+                customers,
+                settings,
+                backupDate: new Date().toISOString()
+            };
+            
+            // Create a download link
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+            const downloadAnchor = document.createElement('a');
+            downloadAnchor.setAttribute("href", dataStr);
+            downloadAnchor.setAttribute("download", `romosh_ala_backup_${new Date().toISOString().split('T')[0]}.json`);
+            document.body.appendChild(downloadAnchor);
+            downloadAnchor.click();
+            document.body.removeChild(downloadAnchor);
+            
+            alert('Backup created successfully!');
+        }
+
+        function restoreData(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            if (!confirm('WARNING: This will overwrite all current data. Are you sure you want to restore?')) {
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    
+                    // Restore each dataset if it exists in the backup
+                    if (backup.savedInvoices) {
+                        localStorage.setItem('savedInvoices', JSON.stringify(backup.savedInvoices));
+                    }
+                    if (backup.stockItems) {
+                        localStorage.setItem('stockItems', JSON.stringify(backup.stockItems));
+                    }
+                    if (backup.customers) {
+                        localStorage.setItem('customers', JSON.stringify(backup.customers));
+                    }
+                    if (backup.settings) {
+                        localStorage.setItem('settings', JSON.stringify(backup.settings));
+                    }
+                    
+                    alert('Data restored successfully! Reloading page...');
+                    setTimeout(() => location.reload(), 1000);
+                } catch (error) {
+                    alert('Error restoring backup: ' + error.message);
+                    console.error(error);
+                }
+            };
+            reader.readAsText(file);
+            
+            // Reset the input so the same file can be selected again if needed
+            input.value = '';
+        }
+    </script>
+    <script>
+ // ======================
+// Core Invoice Functions
+// ======================
+
+// Load all saved invoices
+function loadInvoices(filter = '') {
+    const container = document.getElementById('invoices-container');
+    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices')) || [];
+    
+    if (savedInvoices.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 30px; color: #777;">No saved receipts found</div>';
+        return;
+    }
+    
+    container.innerHTML = '';
+    
+    // Filter invoices if search term exists
+    const filteredInvoices = filter ? savedInvoices.filter(invoice => {
+        const searchTerm = filter.toLowerCase();
+        return (
+            (invoice.invoiceNo && invoice.invoiceNo.toLowerCase().includes(searchTerm)) ||
+            (invoice.customer && invoice.customer.toLowerCase().includes(searchTerm)) ||
+            (invoice.phone && invoice.phone.includes(filter))
+        );
+    }) : savedInvoices;
+    
+    if (filteredInvoices.length === 0) {
+        container.innerHTML = '<div style="text-align: center; padding: 30px; color: #777;">No receipts match your search</div>';
+        return;
+    }
+    
+    // Sort by date (newest first) and by invoice number (descending)
+    filteredInvoices.sort((a, b) => {
+        const dateA = a.date ? new Date(a.date).getTime() : 0;
+        const dateB = b.date ? new Date(b.date).getTime() : 0;
+        
+        if (dateB === dateA) {
+            const numA = extractNumber(a.invoiceNo || '');
+            const numB = extractNumber(b.invoiceNo || '');
+            return numB - numA;
+        }
+        
+        return dateB - dateA;
+    });
+    
+    // Display the sorted invoices
+    filteredInvoices.forEach(invoice => {
+        const invoiceCard = document.createElement('div');
+        invoiceCard.className = 'invoice-card';
+        invoiceCard.dataset.invoiceId = invoice.id;
+        invoiceCard.innerHTML = generateInvoiceHTML(invoice);
+        container.appendChild(invoiceCard);
+    });
+}
+
+// Helper function to extract number from invoice string
+function extractNumber(invoiceNo) {
+    const match = invoiceNo.match(/\d+/);
+    return match ? parseInt(match[0]) : 0;
+}
+
+// Generate HTML for an invoice
+function generateInvoiceHTML(invoice) {
+    return `
+        <div class="invoice-content">
+            <div class="company-header" style="position: relative; display: flex; justify-content: space-between; align-items: center; padding: 20px 0; border-bottom: 1px solid #eee;">
+                <div class="english-text" style="text-align: left; width: 30%;">
+                    <div class="company-name" style="font-size: 18px; font-weight: bold; margin-bottom: 5px; margin-left:20px; color:#ff750c;">
+United Eyewear</div>
+                    <div style="font-size: 14px; margin-bottom: 3px;  margin-left:20px;">Abdul Rahman Ibn Ahmad As Sidayri,As Salamah, Jeddah 23436,</div>
+                </div>
+                <div style="display:block";>
+                    <div class="logo-placeholder" style="width:80px; text-align: center;">
+                        <img src="logo.jpg" style="height:60px ;">
+                    </div>
+                    <div><p style="color:silver;">VAT NO: 310492567700003 </div>
+                         <div><p style="color:silver;">CR: 4030310929</div>
+                </div>
+                <div class="arabic-text" style="text-align: right; width: 30%; direction: rtl;">
+                    <div style="font-size: 18px; font-weight: bold; margin-bottom: 5px; margin-right:20px; color:#ff750c;">متحدون للنظارات</div>
+                    <div style="font-size: 14px; margin-bottom: 3px; margin-right:20px; color:white;"> عبد الرحمن بن أحمد السديري، السلامة، جدة 23436، المملكة العربية السعودية</div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="receipt-title" style="margin-bottom:30px;"><u>Receipt Voucher</u></div>
+            
+            <table class="receipt-table">
+                <tr>
+                    <td class="label">Date / التاريخ</td>
+                    <td>:</td>
+                    <td>${invoice.date || ''}</td>
+                </tr>
+                <tr>
+                    <td class="label">Receipt No / الرقم</td>
+                    <td>:</td>
+                    <td>${invoice.invoiceNo || ''}</td>
+                </tr>
+            </table>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="highlight-box">
+                <div style="margin-bottom: 5px;">Received From / مستلم من</div>
+                <div style="font-weight: bold; font-size: 16px;">${invoice.customer || ''}</div>
+            </div>
+            
+            <div class="highlight-box">
+                <div style="margin-bottom: 5px;">Amount in Figures (SAR) / المبلغ بالأرقام</div>
+                <div style="font-weight: bold; font-size: 18px; color: #2a5298;">${invoice.totals.total || '0.00'} </div>
+            </div>
+            
+            <div class="highlight-box">
+                <div style="margin-bottom: 5px;">Amount in Words / المبلغ بالكلمات</div>
+                <div style="font-weight: bold;">${amountToWords(invoice.totals.total || 0)} Riyal Only </div>
+            </div>
+            
+            <div class="dashed-line"></div>
+            
+            <table class="receipt-table">
+                <tr>
+                    <td class="label">The Bank / البنك</td>
+                    <td>:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">Date / التاريخ</td>
+                    <td>:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">Cash / Cheque No / رقم الشيك</td>
+                    <td>:</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td class="label">For / لصالح</td>
+                    <td>:</td>
+                    <td></td>
+                </tr>
+            </table>
+            
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div>Manager / المدير</div>
+                    <div class="signature-line"></div>
+                </div>
+                <div class="signature-box">
+                    <div>Accountant / المحاسب</div>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+            
+            <div class="signature-section" style="margin-top: 20px;">
+                <div class="signature-box">
+                    <div>Received By / المستلم</div>
+                    <div class="signature-line"></div>
+                    <div style="margin-top: 5px;">${invoice.customer || ''}</div>
+                </div>
+                <div class="signature-box">
+                    <div>Signature / التوقيع</div>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <div>Kingdom of Saudi Arabia – Jeddah 23436 | 310492567700003  |المملكة العربية السعودية – جدة ٢٣٤٣٦  </div>
+                <div>Tel: +966  05 6308 2336 </div>
+            </div>
+            
+            <div class="invoice-actions">
+                <button class="print-btn" onclick="printSingleInvoice('${invoice.id}')">
+                    <i class="fas fa-print"></i> Print
+                </button>
+                <button class="pdf-btn" onclick="downloadAsPDF('${invoice.id}')">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </button>
+            </div>
+        </div>
+    `;
+}
+
+// ======================
+// PDF Generation Functions
+// ======================
+
+// Helper function to load scripts dynamically
+function loadScript(url) {
+    return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = url;
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+    });
+}
+
+// Main PDF generation function
+async function downloadAsPDF(invoiceId) {
+    try {
+        // Check if libraries are loaded, if not load them
+        if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+            // Show loading state
+            const pdfBtn = document.querySelector(`.invoice-card[data-invoice-id="${invoiceId}"] .pdf-btn`);
+            if (pdfBtn) {
+                pdfBtn.disabled = true;
+                pdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading libraries...';
+            }
+
+            // Load required libraries
+            await Promise.all([
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js'),
+                loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js')
+            ]);
+        }
+
+        // Get the invoice element
+        const element = document.querySelector(`.invoice-card[data-invoice-id="${invoiceId}"]`);
+        if (!element) {
+            throw new Error('Invoice not found!');
+        }
+
+        // Update button state
+        const pdfBtn = element.querySelector('.pdf-btn');
+        const originalText = pdfBtn.innerHTML;
+        pdfBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating PDF...';
+        pdfBtn.disabled = true;
+
+        // Create a clone of the element
+        const clone = element.cloneNode(true);
+        
+        // Remove action buttons from clone
+        const actions = clone.querySelector('.invoice-actions');
+        if (actions) actions.remove();
+
+        // Add clone to hidden container
+        const hiddenContainer = document.createElement('div');
+        hiddenContainer.style.position = 'fixed';
+        hiddenContainer.style.left = '-9999px';
+        hiddenContainer.style.top = '0';
+        hiddenContainer.appendChild(clone);
+        document.body.appendChild(hiddenContainer);
+
+        // Generate canvas with retry logic
+        let canvas;
+        try {
+            canvas = await html2canvas(clone, {
+                scale: 2,
+                logging: true,
+                useCORS: true,
+                allowTaint: true,
+                scrollX: 0,
+                scrollY: 0,
+                backgroundColor: '#FFFFFF'
+            });
+        } catch (err) {
+            console.warn('First html2canvas attempt failed, retrying...', err);
+            canvas = await html2canvas(clone, {
+                scale: 1,
+                logging: true,
+                useCORS: true,
+                allowTaint: false,
+                scrollX: 0,
+                scrollY: 0
+            });
+        }
+
+        // Create PDF
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/jpeg', 1.0);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+        
+        pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
+        pdf.save(`receipt_${invoiceId}.pdf`);
+
+        // Clean up
+        document.body.removeChild(hiddenContainer);
+        
+    } catch (error) {
+        console.error('PDF generation failed:', error);
+        alert('Failed to generate PDF: ' + error.message);
+    } finally {
+        // Restore button state
+        const pdfBtn = document.querySelector(`.invoice-card[data-invoice-id="${invoiceId}"] .pdf-btn`);
+        if (pdfBtn) {
+            pdfBtn.innerHTML = '<i class="fas fa-file-pdf"></i> Download PDF';
+            pdfBtn.disabled = false;
+        }
+    }
+}
+
+// ======================
+// Print Functions
+// ======================
+
+function printSingleInvoice(invoiceId) {
+    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices')) || [];
+    const invoice = savedInvoices.find(inv => inv.id == invoiceId);
+    
+    if (!invoice) {
+        alert('Receipt not found!');
+        return;
+    }
+
+    const printContainer = document.createElement('div');
+    printContainer.id = 'print-container';
+    printContainer.style.position = 'fixed';
+    printContainer.style.left = '-9999px';
+    printContainer.style.top = '0';
+
+    const printContent = `
+        <style>
+            @page {
+                size: A4;
+                margin: 5mm;
+            }
+            body {
+                width: 210mm;
+                margin: 0 auto;
+                padding: 5mm;
+                font-size: 14px;
+                font-family: Arial, sans-serif;
+            }
+            .container {
+                width: 190mm;
+                margin: 0 auto;
+                padding: 10mm;
+                border: 1px solid #ddd;
+            }
+            .company-header {
+                text-align: center;
+                margin-bottom: 5mm;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+            .english-text, .arabic-text {
+                width: 40%;
+            }
+            .arabic-text {
+                direction: rtl;
+                font-family: 'Traditional Arabic', Arial, sans-serif;
+            }
+            .company-name {
+                font-weight: bold;
+                font-size: 24px;
+                margin-bottom: 5px;
+            }
+            .logo-placeholder {
+                text-align: center;
+                margin: 0 10px;
+            }
+            .logo-placeholder img {
+                height: 80px;
+            }
+            .divider {
+                border-top: 2px solid #000;
+                margin: 5mm 0;
+            }
+            .receipt-title {
+                text-align: center;
+                font-weight: bold;
+                margin: 5mm 0;
+                font-size: 20px;
+                text-decoration: underline;
+            }
+            .receipt-table {
+                width: 100%;
+                border-collapse: collapse;
+                margin: 5mm 0;
+            }
+            .receipt-table td {
+                padding: 3mm 0;
+                border: none;
+                font-size: 16px;
+            }
+            .receipt-table .label {
+                font-weight: bold;
+                width: 40%;
+            }
+            .dashed-line {
+                border-top: 1px dashed #000;
+                margin: 5mm 0;
+            }
+            .highlight-box {
+                margin: 5mm 0;
+                padding: 3mm;
+                border-left: 3px solid #000;
+                background-color: #f9f9f9;
+            }
+            .highlight-box div {
+                margin-bottom: 2mm;
+                font-size: 16px;
+            }
+            .signature-section {
+                display: flex;
+                justify-content: space-between;
+                margin-top: 10mm;
+            }
+            .signature-box {
+                text-align: center;
+                width: 45%;
+            }
+            .signature-line {
+                border-top: 1px solid #000;
+                margin-top: 30mm;
+                width: 100%;
+            }
+            .footer {
+                margin-top: 10mm;
+                text-align: center;
+                font-size: 14px;
+                border-top: 1px solid #000;
+                padding-top: 3mm;
+            }
+            @media print {
+                .container {
+                    border: none;
+                }
+            }
+        </style>
+        <div class="container">
+            <div class="company-header">
+                <div class="english-text">
+                    <div class="company-name">
+United Eyewear</div>
+                    <div>Abdul Rahman Ibn Ahmad As Sidayri, As Salamah, Jeddah 23436</div>
+                </div>
+                <div class="logo-placeholder">
+                    <img src="logo.jpg">
+                    <div style="font-size: 16px; margin-top: 5px;">VAT NO: 310492567700003 </div>
+                <div style="font-size: 16px; margin-top: 5px;">CR: 4030310929</div>
+            
+                    </div>
+                <div class="arabic-text">
+                    <div style="font-weight: bold; font-size: 24px;"> متحدون للنظارات </div>
+                    <div style="font-size: 16px;">عبد الرحمن بن أحمد السديري، السلامة، جدة 23436، المملكة العربية السعودية</div>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="receipt-title">Receipt Voucher</div>
+            
+            <table class="receipt-table">
+                <tr>
+                    <td class="label">Date / التاريخ</td>
+                    <td>:</td>
+                    <td>${invoice.date || ''}</td>
+                </tr>
+                <tr>
+                    <td class="label">Receipt No / الرقم</td>
+                    <td>:</td>
+                    <td>${invoice.invoiceNo || ''}</td>
+                </tr>
+            </table>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="highlight-box">
+                <div>Received From / مستلم من</div>
+                <div style="font-weight: bold; font-size: 18px;">${invoice.customer || ''}</div>
+            </div>
+            
+            <div class="highlight-box">
+                <div>Amount in Figures (SAR) / المبلغ بالأرقام</div>
+                <div style="font-weight: bold; font-size: 20px; color: #2a5298;">${invoice.totals.total || '0.00'}</div>
+            </div>
+            
+            <div class="highlight-box">
+                <div>Amount in Words / المبلغ بالكلمات</div>
+                <div style="font-weight: bold; font-size: 18px;">${amountToWords(invoice.totals.total || 0)} Riyal Only</div>
+            </div>
+            
+            <div class="dashed-line"></div>
+            
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div>Manager / المدير</div>
+                    <div class="signature-line"></div>
+                </div>
+                <div class="signature-box">
+                    <div>Accountant / المحاسب</div>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+            
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div>Received By / المستلم</div>
+                    <div class="signature-line"></div>
+                    <div style="margin-top: 5px;">${invoice.customer || ''}</div>
+                </div>
+                <div class="signature-box">
+                    <div>Signature / التوقيع</div>
+                    <div class="signature-line"></div>
+                </div>
+            </div>
+            
+            <div class="footer">
+                <div>Kingdom of Saudi Arabia – Jeddah 23436 | Tel: +966 
+05 6308 2336</div>
+                <div></div>
+            </div>
+        </div>
+    `;
+
+    printContainer.innerHTML = printContent;
+    document.body.appendChild(printContainer);
+
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(printContent);
+    printWindow.document.close();
+    
+    printWindow.onload = function() {
+        setTimeout(function() {
+            printWindow.print();
+            printWindow.close();
+            document.body.removeChild(printContainer);
+        }, 200);
+    };
+}
+
+// ======================
+// Utility Functions
+// ======================
+
+function amountToWords(num) {
+    num = parseFloat(num) || 0;
+    num = Math.floor(num);
+    
+    const units = ['', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'];
+    const teens = ['ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen'];
+    const tens = ['', 'ten', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+    
+    if (num === 0) return 'zero';
+    if (num === 1) return 'one';
+    if (num === 2) return 'two';
+    
+    let words = '';
+    
+    if (num >= 100) {
+        const hundred = Math.floor(num / 100);
+        words += units[hundred] + ' hundred';
+        num %= 100;
+        if (num > 0) words += ' and ';
+    }
+    
+    if (num > 0) {
+        if (num < 10) {
+            words += units[num];
+        } else if (num >= 10 && num < 20) {
+            words += teens[num - 10];
+        } else {
+            const ten = Math.floor(num / 10);
+            const unit = num % 10;
+            if (unit > 0) {
+                words += tens[ten] + '-' + units[unit];
+            } else {
+                words += tens[ten];
+            }
+        }
+    }
+    
+    return words;
+}
+
+function searchInvoices() {
+    const searchTerm = document.getElementById('search-input').value.trim();
+    loadInvoices(searchTerm);
+}
+
+// ======================
+// Backup/Restore Functions
+// ======================
+
+function backupData() {
+    const savedInvoices = JSON.parse(localStorage.getItem('savedInvoices')) || [];
+    const stockItems = JSON.parse(localStorage.getItem('stockItems')) || [];
+    const customers = JSON.parse(localStorage.getItem('customers')) || [];
+    const settings = JSON.parse(localStorage.getItem('settings')) || {};
+    
+    const backup = {
+        savedInvoices,
+        stockItems,
+        customers,
+        settings,
+        backupDate: new Date().toISOString()
+    };
+    
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `romosh_ala_backup_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    document.body.removeChild(downloadAnchor);
+    
+    alert('Backup created successfully!');
+}
+
+function restoreData(input) {
+    const file = input.files[0];
+    if (!file) return;
+    
+    if (!confirm('WARNING: This will overwrite all current data. Are you sure you want to restore?')) {
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const backup = JSON.parse(e.target.result);
+            
+            if (backup.savedInvoices) {
+                localStorage.setItem('savedInvoices', JSON.stringify(backup.savedInvoices));
+            }
+            if (backup.stockItems) {
+                localStorage.setItem('stockItems', JSON.stringify(backup.stockItems));
+            }
+            if (backup.customers) {
+                localStorage.setItem('customers', JSON.stringify(backup.customers));
+            }
+            if (backup.settings) {
+                localStorage.setItem('settings', JSON.stringify(backup.settings));
+            }
+            
+            alert('Data restored successfully! Reloading page...');
+            setTimeout(() => location.reload(), 1000);
+        } catch (error) {
+            alert('Error restoring backup: ' + error.message);
+            console.error(error);
+        }
+    };
+    reader.readAsText(file);
+    input.value = '';
+}
+
+// ======================
+// Initialization
+// ======================
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadInvoices();
+    
+    // Preload PDF libraries in background
+    if (typeof html2canvas === 'undefined' || typeof jspdf === 'undefined') {
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js');
+        loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
+    }
+});
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+</body>
+</html>

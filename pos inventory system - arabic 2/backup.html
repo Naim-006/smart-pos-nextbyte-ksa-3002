@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Romosh Ala - Data Backup Center</title>
+    <style>
+        :root {
+            --primary: #3498db;
+            --primary-dark: #2980b9;
+            --danger: #e74c3c;
+            --danger-dark: #c0392b;
+            --success: #2ecc71;
+            --success-dark: #27ae60;
+            --warning: #f39c12;
+            --warning-dark: #d35400;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --gray: #95a5a6;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #f5f7fa;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        h1 {
+            color: var(--dark);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            color: var(--gray);
+            font-size: 1.1rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+
+        .card {
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 30px;
+            transition: var(--transition);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            color: var(--dark);
+        }
+
+        .card-icon {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+
+        .btn i {
+            margin-right: 8px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background-color: var(--success-dark);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-dark);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background-color: var(--warning-dark);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .data-stats {
+            margin: 25px 0;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background-color: var(--light);
+            border-radius: var(--border-radius);
+        }
+
+        .stat-label {
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: var(--border-radius);
+            margin-top: 20px;
+            display: none;
+        }
+
+        .status-success {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-dark);
+            border-left: 4px solid var(--success);
+        }
+
+        .status-error {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--danger-dark);
+            border-left: 4px solid var(--danger);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .tab {
+            padding: 12px 25px;
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--gray);
+            border-bottom: 3px solid transparent;
+            transition: var(--transition);
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .backup-history {
+            margin-top: 30px;
+        }
+
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .history-info {
+            flex: 1;
+        }
+
+        .history-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 40px;
+            color: var(--gray);
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Data Backup Center</h1>
+            <p class="subtitle">Safeguard your Romosh Ala business data</p>
+        </header>
+
+        <div class="tabs">
+            <div class="tab active" onclick="openTab('productsTab')" hidden>
+                <i class="fas fa-boxes"></i> Products Database
+            </div>
+            <div class="tab active" onclick="openTab('localStorageTab')">
+                <i class="fas fa-database"></i> LocalStorage Data
+            </div>
+            <div class="tab" onclick="openTab('settingsTab')">
+                <i class="fas fa-cog"></i> Backup Settings
+            </div>
+        </div>
+
+        <div id="productsTab" class="tab-content" hidden>
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Products Database Backup</h2>
+                    <i class="fas fa-boxes card-icon"></i>
+                </div>
+                
+                <div class="data-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Products:</span>
+                        <span class="stat-value" id="productCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Backup:</span>
+                        <span class="stat-value" id="lastProductBackup">Never</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="exportProducts()">
+                    <i class="fas fa-file-export"></i> Export Products
+                </button>
+                
+                <button class="btn btn-primary" onclick="document.getElementById('importProductsFile').click()">
+                    <i class="fas fa-file-import"></i> Import Products
+                </button>
+                <input type="file" id="importProductsFile" class="file-input" accept=".json" onchange="importProducts(this)">
+                
+                <div id="productsStatus" class="status"></div>
+                
+                <div class="backup-history">
+                    <h3><i class="fas fa-history"></i> Recent Backups</h3>
+                    <div id="productsBackupHistory" class="no-data">
+                        No backup history available
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="localStorageTab" class="tab-content active">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">LocalStorage Data Backup</h2>
+                    <i class="fas fa-database card-icon"></i>
+                </div>
+                
+                <div class="data-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Total Items:</span>
+                        <span class="stat-value" id="localStorageCount">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Last Backup:</span>
+                        <span class="stat-value" id="lastLocalStorageBackup">Never</span>
+                    </div>
+                </div>
+                
+                <button class="btn btn-success" onclick="exportLocalStorage()">
+                    <i class="fas fa-file-export"></i> Export LocalStorage
+                </button>
+                
+                <button class="btn btn-primary" onclick="document.getElementById('importLocalStorageFile').click()">
+                    <i class="fas fa-file-import"></i> Import LocalStorage
+                </button>
+                <input type="file" id="importLocalStorageFile" class="file-input" accept=".json" onchange="importLocalStorage(this)">
+                
+                <button class="btn btn-warning" onclick="showLocalStorageData()">
+                    <i class="fas fa-eye"></i> View Data
+                </button>
+                
+                <div id="localStorageStatus" class="status"></div>
+                
+                <div id="localStorageDataPreview" style="display: none; margin-top: 20px;">
+                    <h3><i class="fas fa-table"></i> Data Preview</h3>
+                    <pre id="localStorageDataContent" style="background: #f8f9fa; padding: 15px; border-radius: var(--border-radius); max-height: 300px; overflow: auto;"></pre>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsTab" class="tab-content">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Backup Settings</h2>
+                    <i class="fas fa-cog card-icon"></i>
+                </div>
+                
+                <div class="form-group">
+                    <h3><i class="fas fa-bell"></i> Automatic Backups</h3>
+                    <div style="display: flex; align-items: center; margin: 15px 0;">
+                        <label style="margin-right: 15px; font-weight: 600;">Enable Auto Backup:</label>
+                        <label class="switch">
+                            <input type="checkbox" id="autoBackupToggle">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div id="autoBackupSettings" style="display: none; margin-top: 15px;">
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Frequency:</label>
+                            <select id="backupFrequency" class="form-control" style="padding: 8px; border-radius: var(--border-radius); border: 1px solid #ddd; width: 200px;">
+                                <option value="daily">Daily</option>
+                                <option value="weekly">Weekly</option>
+                                <option value="monthly">Monthly</option>
+                            </select>
+                        </div>
+                        
+                        <div id="backupTimeContainer" style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600;">Time:</label>
+                            <input type="time" id="backupTime" class="form-control" style="padding: 8px; border-radius: var(--border-radius); border: 1px solid #ddd;">
+                        </div>
+                        
+                        <button class="btn btn-success" onclick="saveBackupSettings()">
+                            <i class="fas fa-save"></i> Save Settings
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="form-group" style="margin-top: 30px;">
+                    <h3><i class="fas fa-shield-alt"></i> Data Protection</h3>
+                    <button class="btn btn-danger" onclick="confirmDataReset()">
+                        <i class="fas fa-trash-alt"></i> Reset All Data
+                    </button>
+                    <p style="margin-top: 10px; color: var(--gray); font-size: 0.9rem;">
+                        Warning: This will delete all products and localStorage data. Use with caution.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database configuration
+        const dbName = 'RomoshAlaOpticalDB';
+        const storeName = 'productsStore';
+        let db;
+        
+        // Tab navigation
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(tabId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            // Refresh data when switching tabs
+            if (tabId === 'productsTab') {
+                updateProductCount();
+            } else if (tabId === 'localStorageTab') {
+                updateLocalStorageCount();
+            }
+        }
+        
+        // Initialize IndexedDB
+        function initDB() {
+            return new Promise((resolve, reject) => {
+                const request = indexedDB.open(dbName, 1);
+                
+                request.onupgradeneeded = function(e) {
+                    db = e.target.result;
+                    if (!db.objectStoreNames.contains(storeName)) {
+                        const store = db.createObjectStore(storeName, { keyPath: 'id' });
+                        store.createIndex('name', 'name', { unique: false });
+                        store.createIndex('category', 'category', { unique: false });
+                        store.createIndex('id', 'id', { unique: true });
+                    }
+                };
+                
+                request.onsuccess = function(e) {
+                    db = e.target.result;
+                    resolve(db);
+                };
+                
+                request.onerror = function(e) {
+                    console.error('Error opening database:', e.target.error);
+                    reject(e.target.error);
+                };
+            });
+        }
+        
+        // Count products in IndexedDB
+        function countProducts() {
+            return new Promise((resolve, reject) => {
+                if (!db) {
+                    reject('Database not initialized');
+                    return;
+                }
+                
+                const transaction = db.transaction([storeName], "readonly");
+                const store = transaction.objectStore(storeName);
+                const countRequest = store.count();
+                
+                countRequest.onsuccess = function() {
+                    resolve(countRequest.result);
+                };
+                
+                countRequest.onerror = function() {
+                    reject('Error counting products');
+                };
+            });
+        }
+        
+        // Update product count display
+        async function updateProductCount() {
+            try {
+                const count = await countProducts();
+                document.getElementById('productCount').textContent = count;
+                
+                // Update backup history if exists
+                const lastBackup = localStorage.getItem('lastProductBackup');
+                if (lastBackup) {
+                    document.getElementById('lastProductBackup').textContent = new Date(lastBackup).toLocaleString();
+                    updateBackupHistory();
+                }
+            } catch (error) {
+                console.error('Error updating product count:', error);
+                document.getElementById('productCount').textContent = 'Error';
+            }
+        }
+        
+        // Update LocalStorage count display
+        function updateLocalStorageCount() {
+            const count = localStorage.length;
+            document.getElementById('localStorageCount').textContent = count;
+            
+            // Update backup history if exists
+            const lastBackup = localStorage.getItem('lastLocalStorageBackup');
+            if (lastBackup) {
+                document.getElementById('lastLocalStorageBackup').textContent = new Date(lastBackup).toLocaleString();
+            }
+        }
+        
+        // Export products to JSON
+        async function exportProducts() {
+            if (!db) {
+                showStatus('productsStatus', 'Database not initialized', true);
+                return;
+            }
+            
+            try {
+                const products = await new Promise((resolve, reject) => {
+                    const transaction = db.transaction([storeName], "readonly");
+                    const store = transaction.objectStore(storeName);
+                    const request = store.getAll();
+                    
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject('Error fetching products');
+                });
+                
+                if (products.length === 0) {
+                    showStatus('productsStatus', 'No products to export', true);
+                    return;
+                }
+                
+                const backup = {
+                    products,
+                    backupDate: new Date().toISOString(),
+                    database: dbName,
+                    store: storeName,
+                    version: 1
+                };
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                downloadAnchor.setAttribute("download", `romosh_ala_products_${timestamp}.json`);
+                
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                document.body.removeChild(downloadAnchor);
+                
+                // Save backup info
+                const backupInfo = {
+                    date: new Date().toISOString(),
+                    itemCount: products.length,
+                    type: 'products'
+                };
+                
+                saveBackupHistory(backupInfo);
+                localStorage.setItem('lastProductBackup', new Date().toISOString());
+                updateProductCount();
+                
+                showStatus('productsStatus', `Successfully exported ${products.length} products!`, false);
+            } catch (error) {
+                console.error('Export error:', error);
+                showStatus('productsStatus', 'Error exporting products: ' + error, true);
+            }
+        }
+        
+        // Import products from JSON
+        function importProducts(input) {
+            const file = input.files[0];
+            if (!file) {
+                showStatus('productsStatus', 'No file selected', true);
+                return;
+            }
+            
+            if (!confirm('⚠️ WARNING: This will overwrite existing products. Are you sure you want to continue?')) {
+                input.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (!backup.products || !Array.isArray(backup.products)) {
+                        throw new Error('Invalid backup file format');
+                    }
+                    
+                    // Clear existing products
+                    await new Promise((resolve, reject) => {
+                        const transaction = db.transaction([storeName], "readwrite");
+                        const store = transaction.objectStore(storeName);
+                        
+                        const clearRequest = store.clear();
+                        clearRequest.onsuccess = () => resolve();
+                        clearRequest.onerror = () => reject('Error clearing existing products');
+                    });
+                    
+                    // Import new products
+                    const importPromises = backup.products.map(product => {
+                        return new Promise((resolve, reject) => {
+                            const transaction = db.transaction([storeName], "readwrite");
+                            const store = transaction.objectStore(storeName);
+                            
+                            const request = store.put(product);
+                            request.onsuccess = () => resolve();
+                            request.onerror = () => reject(`Error importing product ${product.id}`);
+                        });
+                    });
+                    
+                    await Promise.all(importPromises);
+                    
+                    // Update UI and show success
+                    updateProductCount();
+                    showStatus('productsStatus', `Successfully imported ${backup.products.length} products!`, false);
+                    
+                    // Save import info
+                    const backupInfo = {
+                        date: new Date().toISOString(),
+                        itemCount: backup.products.length,
+                        type: 'products-import'
+                    };
+                    
+                    saveBackupHistory(backupInfo);
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showStatus('productsStatus', 'Error importing products: ' + error.message, true);
+                } finally {
+                    input.value = '';
+                }
+            };
+            
+            reader.onerror = function() {
+                showStatus('productsStatus', 'Error reading file', true);
+                input.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Export LocalStorage data
+        function exportLocalStorage() {
+            try {
+                const lsData = {};
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    try {
+                        // Try to parse as JSON first
+                        lsData[key] = JSON.parse(localStorage.getItem(key));
+                    } catch (e) {
+                        // If parsing fails, store the raw value
+                        lsData[key] = localStorage.getItem(key);
+                    }
+                }
+                
+                const backup = {
+                    localStorage: lsData,
+                    backupDate: new Date().toISOString(),
+                    version: 1
+                };
+                
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(backup, null, 2));
+                const downloadAnchor = document.createElement('a');
+                downloadAnchor.setAttribute("href", dataStr);
+                
+                const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+                downloadAnchor.setAttribute("download", `romosh_ala_localstorage_${timestamp}.json`);
+                
+                document.body.appendChild(downloadAnchor);
+                downloadAnchor.click();
+                document.body.removeChild(downloadAnchor);
+                
+                // Save backup info
+                localStorage.setItem('lastLocalStorageBackup', new Date().toISOString());
+                updateLocalStorageCount();
+                
+                showStatus('localStorageStatus', 'LocalStorage exported successfully!', false);
+            } catch (error) {
+                console.error('Export error:', error);
+                showStatus('localStorageStatus', 'Error exporting LocalStorage: ' + error.message, true);
+            }
+        }
+        
+        // Import LocalStorage data
+        function importLocalStorage(input) {
+            const file = input.files[0];
+            if (!file) {
+                showStatus('localStorageStatus', 'No file selected', true);
+                return;
+            }
+            
+            if (!confirm('⚠️ WARNING: This will overwrite existing LocalStorage data. Are you sure you want to continue?')) {
+                input.value = '';
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backup = JSON.parse(e.target.result);
+                    if (!backup.localStorage) {
+                        throw new Error('Invalid backup file format');
+                    }
+                    
+                    // Clear existing LocalStorage
+                    localStorage.clear();
+                    
+                    // Restore all data
+                    for (const key in backup.localStorage) {
+                        if (typeof backup.localStorage[key] === 'object') {
+                            // If it's an object, stringify it
+                            localStorage.setItem(key, JSON.stringify(backup.localStorage[key]));
+                        } else {
+                            // Otherwise store as-is
+                            localStorage.setItem(key, backup.localStorage[key]);
+                        }
+                    }
+                    
+                    // Update UI and show success
+                    updateLocalStorageCount();
+                    showStatus('localStorageStatus', 'LocalStorage imported successfully! Page will reload...', false);
+                    
+                    // Reload after short delay
+                    setTimeout(() => location.reload(), 1000);
+                } catch (error) {
+                    console.error('Import error:', error);
+                    showStatus('localStorageStatus', 'Error importing LocalStorage: ' + error.message, true);
+                } finally {
+                    input.value = '';
+                }
+            };
+            
+            reader.onerror = function() {
+                showStatus('localStorageStatus', 'Error reading file', true);
+                input.value = '';
+            };
+            
+            reader.readAsText(file);
+        }
+        
+        // Show LocalStorage data preview
+        function showLocalStorageData() {
+            const preview = document.getElementById('localStorageDataPreview');
+            const content = document.getElementById('localStorageDataContent');
+            
+            const lsData = {};
+            for (let i = 0; i < localStorage.length; i++) {
+                const key = localStorage.key(i);
+                try {
+                    lsData[key] = JSON.parse(localStorage.getItem(key));
+                } catch (e) {
+                    lsData[key] = localStorage.getItem(key);
+                }
+            }
+            
+            content.textContent = JSON.stringify(lsData, null, 2);
+            preview.style.display = 'block';
+        }
+        
+        // Save backup history
+        function saveBackupHistory(backupInfo) {
+            let history = JSON.parse(localStorage.getItem('backupHistory') || '[]');
+            
+            // Add new backup info
+            history.unshift(backupInfo);
+            
+            // Keep only last 10 entries
+            if (history.length > 10) {
+                history = history.slice(0, 10);
+            }
+            
+            localStorage.setItem('backupHistory', JSON.stringify(history));
+            updateBackupHistory();
+        }
+        
+        // Update backup history display
+        function updateBackupHistory() {
+            const historyContainer = document.getElementById('productsBackupHistory');
+            const history = JSON.parse(localStorage.getItem('backupHistory') || '[]');
+            
+            if (history.length === 0) {
+                historyContainer.innerHTML = '<div class="no-data">No backup history available</div>';
+                return;
+            }
+            
+            let html = '';
+            history.forEach(item => {
+                const date = new Date(item.date);
+                const typeIcon = item.type.includes('import') ? 'fa-file-import' : 'fa-file-export';
+                const typeClass = item.type.includes('import') ? 'text-success' : 'text-primary';
+                
+                html += `
+                    <div class="history-item">
+                        <div class="history-info">
+                            <div><i class="fas ${typeIcon} ${typeClass}"></i> ${item.type.includes('import') ? 'Import' : 'Export'}</div>
+                            <div style="font-size: 0.9rem; color: var(--gray);">${date.toLocaleString()}</div>
+                        </div>
+                        <div class="history-actions">
+                            <span class="badge" style="background: var(--primary); color: white; padding: 5px 10px; border-radius: 20px;">${item.itemCount} items</span>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            historyContainer.innerHTML = html;
+        }
+        
+        // Show status message
+        function showStatus(elementId, message, isError) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = isError ? 'status status-error' : 'status status-success';
+            element.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Confirm data reset
+        function confirmDataReset() {
+            if (confirm('🚨 DANGER: This will permanently delete ALL products and LocalStorage data. Are you absolutely sure?')) {
+                if (confirm('⚠️ LAST WARNING: This cannot be undone. All data will be lost. Proceed?')) {
+                    resetAllData();
+                }
+            }
+        }
+        
+        // Reset all data
+        async function resetAllData() {
+            try {
+                // Clear IndexedDB
+                if (db) {
+                    await new Promise((resolve, reject) => {
+                        const transaction = db.transaction([storeName], "readwrite");
+                        const store = transaction.objectStore(storeName);
+                        
+                        const clearRequest = store.clear();
+                        clearRequest.onsuccess = () => resolve();
+                        clearRequest.onerror = () => reject('Error clearing products');
+                    });
+                }
+                
+                // Clear LocalStorage
+                localStorage.clear();
+                
+                // Update UI
+                updateProductCount();
+                updateLocalStorageCount();
+                
+                showStatus('localStorageStatus', 'All data has been reset successfully. Page will reload...', false);
+                setTimeout(() => location.reload(), 1000);
+            } catch (error) {
+                console.error('Reset error:', error);
+                showStatus('localStorageStatus', 'Error resetting data: ' + error.message, true);
+            }
+        }
+        
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                await initDB();
+                updateProductCount();
+                updateLocalStorageCount();
+                updateBackupHistory();
+                
+                // Load settings
+                const autoBackup = localStorage.getItem('autoBackup') === 'true';
+                document.getElementById('autoBackupToggle').checked = autoBackup;
+                toggleAutoBackupSettings(autoBackup);
+                
+                if (autoBackup) {
+                    document.getElementById('backupFrequency').value = localStorage.getItem('backupFrequency') || 'daily';
+                    document.getElementById('backupTime').value = localStorage.getItem('backupTime') || '02:00';
+                }
+            } catch (error) {
+                console.error('Initialization error:', error);
+            }
+        });
+        
+        // Toggle auto backup settings
+        document.getElementById('autoBackupToggle').addEventListener('change', function() {
+            toggleAutoBackupSettings(this.checked);
+        });
+        
+        function toggleAutoBackupSettings(show) {
+            const settingsDiv = document.getElementById('autoBackupSettings');
+            settingsDiv.style.display = show ? 'block' : 'none';
+        }
+        
+        // Save backup settings
+        function saveBackupSettings() {
+            const enabled = document.getElementById('autoBackupToggle').checked;
+            const frequency = document.getElementById('backupFrequency').value;
+            const time = document.getElementById('backupTime').value;
+            
+            localStorage.setItem('autoBackup', enabled);
+            localStorage.setItem('backupFrequency', frequency);
+            localStorage.setItem('backupTime', time);
+            
+            // TODO: Implement actual scheduled backups
+            // This would require a service worker or server-side solution
+            
+            showStatus('localStorageStatus', 'Backup settings saved successfully!', false);
+        }
+    </script>
+</body>
+</html>

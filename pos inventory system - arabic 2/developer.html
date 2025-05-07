@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Niam Hossain | Immersive 3D Developer Portfolio</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap');
+        
+        :root {
+            --primary: #00f0ff;
+            --secondary: #ff00e4;
+            --tertiary: #00ff87;
+            --dark: #0a0a14;
+            --darker: #05050a;
+            --light: #f0f0f8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+        
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        section {
+            width: 100%;
+            min-height: 100vh;
+            padding: 5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            transform-style: preserve-3d;
+            isolation: isolate;
+        }
+        
+        .hero {
+            flex-direction: column;
+            justify-content: center;
+            text-align: center;
+            gap: 2rem;
+            overflow: hidden;
+        }
+        
+        h1, h2, h3 {
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        
+        h1 {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 800;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            line-height: 1.1;
+            transform: translateZ(50px);
+            letter-spacing: -0.03em;
+        }
+        
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            transform: translateZ(30px);
+            background: linear-gradient(45deg, var(--light), var(--tertiary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+        
+        p {
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            line-height: 1.6;
+            max-width: 700px;
+            transform: translateZ(20px);
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .gradient-text {
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: clamp(0.8rem, 2vw, 1rem) clamp(1.5rem, 3vw, 2rem);
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: var(--dark);
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            margin-top: 2rem;
+            transform: translateZ(40px);
+            transition: all 0.3s;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            font-size: clamp(0.9rem, 2vw, 1rem);
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--secondary), var(--primary));
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateZ(40px) scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
+        }
+        
+        .btn:hover::before {
+            opacity: 1;
+        }
+        
+        .profile-pic {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 5px solid var(--glass);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
+            transform: translateZ(40px);
+            margin-bottom: 2rem;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            padding: 5px;
+        }
+        
+        .about {
+            display: flex;
+            gap: 4rem;
+            align-items: center;
+        }
+        
+        .about-content {
+            flex: 1;
+        }
+        
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .skill-category {
+            flex: 1;
+            min-width: 250px;
+        }
+        
+        .skill-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+        }
+        
+        .skill-item:hover {
+            transform: translateY(-5px) translateZ(10px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            border-color: var(--primary);
+        }
+        
+        .skill-icon {
+            font-size: 1.5rem;
+            color: var(--primary);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 8px;
+        }
+        
+        .skill-info h4 {
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
+            color: var(--light);
+        }
+        
+        .skill-info p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        
+        .project-card {
+            background: var(--glass);
+            border-radius: 20px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 240, 255, 0.05), rgba(255, 0, 228, 0.05));
+            z-index: -1;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-10px) translateZ(20px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary);
+        }
+        
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        .project-tag {
+            padding: 0.3rem 0.8rem;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 50px;
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        
+        .project-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--light);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+        
+        .project-link:hover {
+            color: var(--primary);
+        }
+        
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 600px;
+            margin-top: 2rem;
+        }
+        
+        .form-group {
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        
+        input, textarea {
+            width: 100%;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 1.2rem;
+            border-radius: 10px;
+            color: white;
+            font-family: 'Inter', sans-serif;
+            backdrop-filter: blur(5px);
+            transition: all 0.3s;
+        }
+        
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.3);
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        label {
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            transition: all 0.3s;
+            transform-origin: left center;
+            padding: 0 0.5rem;
+            background: var(--dark);
+        }
+        
+        input:focus + label,
+        textarea:focus + label,
+        input:not(:placeholder-shown) + label,
+        textarea:not(:placeholder-shown) + label {
+            transform: translateY(-1.5rem) translateZ(10px) scale(0.8);
+            color: var(--primary);
+        }
+        
+        .floating-cubes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .cube {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            transform-style: preserve-3d;
+            animation: float 15s infinite linear;
+        }
+        
+        .cube:nth-child(1) {
+            top: 20%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+        
+        .cube:nth-child(2) {
+            top: 60%;
+            left: 80%;
+            animation-delay: 2s;
+        }
+        
+        .cube:nth-child(3) {
+            top: 80%;
+            left: 30%;
+            animation-delay: 4s;
+        }
+        
+        .cube:nth-child(4) {
+            top: 30%;
+            left: 70%;
+            animation-delay: 6s;
+        }
+        
+        .cube:nth-child(5) {
+            top: 70%;
+            left: 20%;
+            animation-delay: 1s;
+        }
+        
+        .cube:nth-child(6) {
+            top: 40%;
+            left: 60%;
+            animation-delay: 3s;
+        }
+        
+        .face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, rgba(0, 240, 255, 0.2), rgba(255, 0, 228, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            opacity: 0.8;
+        }
+        
+        .face-front { transform: translateZ(25px); }
+        .face-back { transform: rotateY(180deg) translateZ(25px); }
+        .face-right { transform: rotateY(90deg) translateZ(25px); }
+        .face-left { transform: rotateY(-90deg) translateZ(25px); }
+        .face-top { transform: rotateX(90deg) translateZ(25px); }
+        .face-bottom { transform: rotateX(-90deg) translateZ(25px); }
+        
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg) translateZ(0); }
+            50% { transform: translateY(-50px) rotate(180deg) translateZ(50px); }
+            100% { transform: translateY(0) rotate(360deg) translateZ(0); }
+        }
+        
+        .particles {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: -2;
+        }
+        
+        .particle {
+            position: absolute;
+            background: var(--primary);
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 50%;
+            color: var(--light);
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            transform-style: preserve-3d;
+        }
+        
+        .social-link:hover {
+            transform: translateY(-5px) translateZ(10px);
+            color: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(0, 240, 255, 0.3);
+        }
+        
+        .experience-timeline {
+            position: relative;
+            max-width: 800px;
+            margin-top: 3rem;
+        }
+        
+        .experience-timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20px;
+            height: 100%;
+            width: 2px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-left: 50px;
+            margin-bottom: 2.5rem;
+            transform-style: preserve-3d;
+        }
+        
+        .timeline-date {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: var(--dark);
+        }
+        
+        .timeline-content {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        
+        .timeline-content:hover {
+            transform: translateZ(10px);
+            border-color: var(--primary);
+        }
+        
+        .timeline-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+        
+        .timeline-content h5 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--light);
+            opacity: 0.8;
+        }
+        
+        .nav-dots {
+            position: fixed;
+            right: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            z-index: 100;
+        }
+        
+        .nav-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .nav-dot::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border: 1px solid var(--primary);
+            border-radius: 50%;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .nav-dot.active {
+            background: var(--primary);
+            transform: scale(1.3);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+        
+        .nav-dot.active::after {
+            opacity: 1;
+        }
+        
+        .nav-dot:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.6);
+        }
+        
+        /* Responsive Adjustments */
+        @media (max-width: 1200px) {
+            section {
+                padding: 4rem;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            section {
+                padding: 3rem;
+            }
+            
+            .about {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .skills-container {
+                flex-direction: column;
+            }
+            
+            .nav-dots {
+                right: 1rem;
+            }
+            
+            .profile-pic {
+                width: 150px;
+                height: 150px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            section {
+                padding: 2rem 1.5rem;
+                min-height: auto;
+                height: auto;
+                padding-top: 5rem;
+                padding-bottom: 5rem;
+            }
+            
+            h1 {
+                font-size: 3.5rem;
+            }
+            
+            h2 {
+                font-size: 2.5rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .experience-timeline::before {
+                left: 15px;
+            }
+            
+            .timeline-item {
+                padding-left: 40px;
+            }
+            
+            .timeline-date {
+                width: 30px;
+                height: 30px;
+                font-size: 0.8rem;
+            }
+            
+            .nav-dots {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .project-links {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .social-links {
+                gap: 1rem;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+            }
+            
+            .profile-pic {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Fixed Navigation Dots -->
+        <div class="nav-dots">
+            <div class="nav-dot active" data-section="hero"></div>
+            <div class="nav-dot" data-section="about"></div>
+            <div class="nav-dot" data-section="skills"></div>
+            <div class="nav-dot" data-section="projects"></div>
+            <div class="nav-dot" data-section="experience"></div>
+            <div class="nav-dot" data-section="contact"></div>
+        </div>
+        
+        <!-- Floating 3D elements -->
+        <div class="floating-cubes">
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+            <div class="cube">
+                <div class="face face-front"></div>
+                <div class="face face-back"></div>
+                <div class="face face-right"></div>
+                <div class="face face-left"></div>
+                <div class="face face-top"></div>
+                <div class="face face-bottom"></div>
+            </div>
+        </div>
+        
+        <!-- Particle background -->
+        <div class="particles" id="particles-js"></div>
+        
+        <!-- Hero Section -->
+        <section class="hero" id="hero">
+            <img src="me.jpg" alt="Niam Hossain" class="profile-pic">
+            <h1>Naim Hossain</h1>
+            <p class="subtitle" style="transform: translateZ(30px);">Building <span class="gradient-text">Next-Generation</span> Digital Experiences</p>
+            <div class="btn-container" style="display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;">
+                <a href="#projects" class="btn">
+                    <i class="fas fa-code"></i> View Work
+                </a>
+                <a href="#contact" class="btn" style="background: transparent; border: 1px solid var(--primary); color: var(--primary);">
+                    <i class="fas fa-paper-plane"></i> Contact Me
+                </a>
+            </div>
+            
+            <div class="social-links">
+                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-codepen"></i></a>
+            </div>
+        </section>
+        
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="about-content">
+                <h2>About Me</h2>
+                <p>I'm a full-stack developer specializing in creating immersive 3D web experiences. With 5+ years of experience, I combine technical expertise with creative vision to build digital products that push boundaries.</p>
+                
+                <div class="skills-container">
+                    <div class="skill-category">
+                        <h3>Frontend Expertise</h3>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fab fa-react"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>React & Next.js</h4>
+                                <p>Advanced component architecture</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-cube"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>Three.js</h4>
+                                <p>3D WebGL experiences</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fab fa-js"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>JavaScript/TypeScript</h4>
+                                <p>Modern ES6+ development</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="skill-category">
+                        <h3>Backend & More</h3>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fab fa-node"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>Node.js</h4>
+                                <p>API and server development</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-database"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>Database Systems</h4>
+                                <p>MongoDB, PostgreSQL</p>
+                            </div>
+                        </div>
+                        <div class="skill-item">
+                            <div class="skill-icon">
+                                <i class="fas fa-server"></i>
+                            </div>
+                            <div class="skill-info">
+                                <h4>DevOps</h4>
+                                <p>Docker, AWS, CI/CD</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Projects Section -->
+        <section id="projects">
+            <h2>Featured Projects</h2>
+            <p>Selected work showcasing my expertise in 3D web development and interactive experiences.</p>
+            
+            <div class="projects-grid">
+                <div class="project-card">
+                    <h3>3D Portfolio Builder</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">Three.js</span>
+                        <span class="project-tag">GSAP</span>
+                        <span class="project-tag">React</span>
+                    </div>
+                    <p>A customizable 3D portfolio template with physics-based interactions and WebGL rendering.</p>
+                    <div class="project-links">
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-github"></i> View Code
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <h3>WebXR AR Showroom</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">WebXR</span>
+                        <span class="project-tag">A-Frame</span>
+                        <span class="project-tag">Three.js</span>
+                    </div>
+                    <p>Augmented reality product showcase that works directly in mobile browsers.</p>
+                    <div class="project-links">
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-github"></i> View Code
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="project-card">
+                    <h3>Interactive Data Globe</h3>
+                    <div class="project-tags">
+                        <span class="project-tag">D3.js</span>
+                        <span class="project-tag">WebGL</span>
+                        <span class="project-tag">TypeScript</span>
+                    </div>
+                    <p>3D data visualization platform showing real-time global metrics with interactive controls.</p>
+                    <div class="project-links">
+                        <a href="#" class="project-link">
+                            <i class="fas fa-external-link-alt"></i> Live Demo
+                        </a>
+                        <a href="#" class="project-link">
+                            <i class="fab fa-github"></i> View Code
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Experience Section -->
+        <section id="experience">
+            <h2>Professional Journey</h2>
+            <p>My career path and key milestones in the tech industry.</p>
+            
+            <div class="experience-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2022</div>
+                    <div class="timeline-content">
+                        <h4>Senior Frontend Developer</h4>
+                        <h5>InnovateTech Solutions</h5>
+                        <p>Led the development of interactive 3D web applications for enterprise clients, implementing WebGL and Three.js solutions.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">2020</div>
+                    <div class="timeline-content">
+                        <h4>Full-Stack Developer</h4>
+                        <h5>Digital Creations Agency</h5>
+                        <p>Built immersive web experiences and e-commerce platforms with React, Node.js, and custom 3D integrations.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-date">2018</div>
+                    <div class="timeline-content">
+                        <h4>Frontend Developer</h4>
+                        <h5>WebCraft Studios</h5>
+                        <p>Developed responsive websites and web applications with focus on performance and user experience.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Contact Section -->
+        <section id="contact">
+            <h2>Let's Build Something Amazing</h2>
+            <p>Have a project in mind? Get in touch and let's discuss how we can bring your vision to life.</p>
+            
+            <form class="contact-form">
+                <div class="form-group">
+                    <input type="text" id="name" placeholder=" " required>
+                    <label for="name">Your Name</label>
+                </div>
+                
+                <div class="form-group">
+                    <input type="email" id="email" placeholder=" " required>
+                    <label for="email">Your Email</label>
+                </div>
+                
+                <div class="form-group">
+                    <textarea id="message" placeholder=" " required></textarea>
+                    <label for="message">Your Message</label>
+                </div>
+                
+                <button type="submit" class="btn">
+                    <i class="fas fa-paper-plane"></i> Send Message
+                </button>
+            </form>
+        </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+    <script>
+        // Initialize GSAP and ScrollTrigger
+        gsap.registerPlugin(ScrollTrigger);
+        
+        // Create particles background
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles-js');
+            const particleCount = window.innerWidth < 768 ? 50 : 100;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random properties
+                const size = Math.random() * 5 + 1;
+                const posX = Math.random() * 100;
+                const posY = Math.random() * 100;
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 10 + 5;
+                const opacity = Math.random() * 0.5 + 0.1;
+                
+                // Apply styles
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.left = `${posX}%`;
+                particle.style.top = `${posY}%`;
+                particle.style.opacity = opacity;
+                particle.style.background = i % 2 === 0 ? 'var(--primary)' : 'var(--secondary)';
+                
+                // Add animation
+                gsap.to(particle, {
+                    y: `+=${(Math.random() - 0.5) * 100}`,
+                    x: `+=${(Math.random() - 0.5) * 100}`,
+                    duration: duration,
+                    delay: delay,
+                    repeat: -1,
+                    yoyo: true,
+                    ease: "sine.inOut"
+                });
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+        
+        // Set up scroll-based 3D animations and navigation
+        function setupAnimations() {
+            const sections = document.querySelectorAll('section');
+            const navDots = document.querySelectorAll('.nav-dot');
+            let isScrolling = false;
+            let lastScrollTime = 0;
+            let autoScrollTimeout;
+            let isAutoScrolling = false;
+            
+            // Function to find the nearest section to scroll to
+            function findNearestSection() {
+                const scrollPosition = window.scrollY + (window.innerHeight / 2);
+                let closestSection = null;
+                let minDistance = Infinity;
+                
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const sectionTop = rect.top + window.scrollY;
+                    const sectionBottom = sectionTop + rect.height;
+                    const distanceTop = Math.abs(scrollPosition - sectionTop);
+                    const distanceBottom = Math.abs(scrollPosition - sectionBottom);
+                    const distance = Math.min(distanceTop, distanceBottom);
+                    
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestSection = section;
+                    }
+                });
+                
+                return closestSection;
+            }
+            
+            // Function to handle auto-scroll to nearest section
+            function startAutoScroll() {
+                if (isAutoScrolling) return;
+                
+                clearTimeout(autoScrollTimeout);
+                autoScrollTimeout = setTimeout(() => {
+                    const nearestSection = findNearestSection();
+                    if (nearestSection && !isScrolling) {
+                        isAutoScrolling = true;
+                        isScrolling = true;
+                        
+                        // Calculate duration based on distance to scroll
+                        const currentPosition = window.scrollY;
+                        const targetPosition = nearestSection.offsetTop;
+                        const distance = Math.abs(targetPosition - currentPosition);
+                        const baseDuration = 5; // 5 seconds base duration
+                        const duration = Math.min(baseDuration, baseDuration * (distance / window.innerHeight));
+                        
+                        gsap.to(window, {
+                            scrollTo: {
+                                y: targetPosition,
+                                autoKill: false
+                            },
+                            duration: duration,
+                            ease: "power2.inOut",
+                            onComplete: () => {
+                                isScrolling = false;
+                                isAutoScrolling = false;
+                                updateActiveDot();
+                            },
+                            onUpdate: updateActiveDot
+                        });
+                    }
+                }, 2000); // 2 second delay before auto-scroll
+            }
+            
+            // Function to handle scroll events
+            function handleScroll() {
+                const currentTime = Date.now();
+                
+                // Throttle scroll events
+                if (currentTime - lastScrollTime < 100) return;
+                lastScrollTime = currentTime;
+                
+                if (!isScrolling) {
+                    updateActiveDot();
+                    startAutoScroll(); // Restart auto-scroll timer
+                }
+            }
+            
+            // Function to update active navigation dot
+            function updateActiveDot() {
+                const scrollPosition = window.scrollY + (window.innerHeight / 3);
+                let activeSectionId = '';
+                
+                sections.forEach(section => {
+                    const rect = section.getBoundingClientRect();
+                    const sectionTop = rect.top + window.scrollY;
+                    const sectionBottom = sectionTop + rect.height;
+                    
+                    if (scrollPosition >= sectionTop && scrollPosition <= sectionBottom) {
+                        activeSectionId = section.id;
+                    }
+                });
+                
+                navDots.forEach(dot => {
+                    dot.classList.remove('active');
+                    if (dot.dataset.section === activeSectionId) {
+                        dot.classList.add('active');
+                    }
+                });
+            }
+            
+            // Initialize ScrollTrigger for each section
+            sections.forEach((section, index) => {
+                const elements = section.querySelectorAll('h1, h2, h3, p, .btn, .project-card, .skill-item, .timeline-item, .social-link');
+                
+                // Initial hide all elements
+                gsap.set(elements, { opacity: 0, y: 50 });
+                
+                // Create timeline for this section
+                const tl = gsap.timeline({
+                    scrollTrigger: {
+                        trigger: section,
+                        start: "top 70%",
+                        toggleActions: "play none none none",
+                        onEnter: () => {
+                            updateActiveDot();
+                            startAutoScroll(); // Restart auto-scroll when entering new section
+                        },
+                        onEnterBack: () => {
+                            updateActiveDot();
+                            startAutoScroll(); // Restart auto-scroll when entering new section
+                        }
+                    }
+                });
+                
+                // Animate elements with 3D perspective
+                elements.forEach((el, i) => {
+                    tl.to(el, { 
+                        opacity: 1, 
+                        y: 0,
+                        duration: 0.8,
+                        ease: "power3.out",
+                        transform: `translateZ(${20 + (i * 5)}px)`,
+                        stagger: 0.1
+                    }, i * 0.1);
+                });
+                
+                // Add 3D tilt effect on scroll for the section
+                ScrollTrigger.create({
+                    trigger: section,
+                    start: "top center",
+                    end: "bottom center",
+                    onUpdate: (self) => {
+                        const progress = self.progress;
+                        const rotationY = progress * 10 - 5; // -5 to 5 degrees
+                        const rotationX = progress * 5 - 2.5; // -2.5 to 2.5 degrees
+                        section.style.transform = `rotateY(${rotationY}deg) rotateX(${rotationX}deg)`;
+                        
+                        // Parallax effect for floating cubes
+                        const cubes = document.querySelectorAll('.cube');
+                        cubes.forEach((cube, i) => {
+                            const depth = (i % 2 === 0) ? progress * 100 : -progress * 100;
+                            cube.style.transform = `translateZ(${depth}px) rotateY(${progress * 360}deg) rotateX(${progress * 180}deg)`;
+                        });
+                    }
+                });
+            });
+            
+            // Animate floating cubes
+            const cubes = document.querySelectorAll('.cube');
+            cubes.forEach((cube, i) => {
+                gsap.to(cube, {
+                    rotationY: 360,
+                    rotationX: 360,
+                    duration: 30 + (i * 5),
+                    repeat: -1,
+                    ease: "none"
+                });
+            });
+            
+            // Nav dot click handlers
+            navDots.forEach(dot => {
+                dot.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const sectionId = dot.getAttribute('data-section');
+                    const section = document.getElementById(sectionId);
+                    
+                    if (section) {
+                        isScrolling = true;
+                        clearTimeout(autoScrollTimeout); // Cancel pending auto-scroll
+                        
+                        gsap.to(window, {
+                            scrollTo: {
+                                y: section.offsetTop,
+                                autoKill: false
+                            },
+                            duration: 2, // 2 seconds for manual navigation
+                            ease: "power2.inOut",
+                            onComplete: () => {
+                                isScrolling = false;
+                                updateActiveDot();
+                                startAutoScroll(); // Restart auto-scroll after manual navigation
+                            }
+                        });
+                    }
+                });
+            });
+            
+            // Handle scroll events
+            window.addEventListener('scroll', () => {
+                if (!isScrolling) {
+                    updateActiveDot();
+                    startAutoScroll(); // Restart auto-scroll timer on user scroll
+                }
+            });
+            
+            // Hide nav dots on mobile
+            function handleResize() {
+                const navDots = document.querySelector('.nav-dots');
+                if (window.innerWidth <= 768) {
+                    navDots.style.display = 'none';
+                } else {
+                    navDots.style.display = 'flex';
+                }
+            }
+            
+            window.addEventListener('resize', handleResize);
+            handleResize();
+            
+            // Initial active dot update
+            updateActiveDot();
+            
+            // Start initial auto-scroll after page loads
+            startAutoScroll();
+        }
+        
+        // Initialize everything when DOM is loaded
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            setupAnimations();
+        });
+    </script>
+</body>
+</html>

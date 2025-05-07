@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KUET Admission Test Seat Plan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&display=swap" rel="stylesheet">
+ 
+    <style>
+         @font-face {
+    font-family: "HongKong Medium";
+    src: url("path-to-font/HongKong-Medium.woff2") format("woff2"),
+         url("path-to-font/HongKong-Medium.woff") format("woff");
+    font-weight: normal;
+    font-style: normal;
+}
+
+        body {
+            font-family: 'Hind Siliguri', serif;   margin: 0;
+            padding: 0;
+            background-color: #ffffff;
+        }
+
+        header {
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            text-align: center;
+            
+            top: 0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        header img {
+            height: 50px;
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background-color: white;
+            border-radius: 5px;
+           
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .title h1 {
+            margin: 0;
+            font-size: 20px;
+            color: #333;
+        }
+
+        .title h2 {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #000000;
+            font-weight: 200;
+        }
+
+        .seatplan {
+            margin-top: 20px;
+        }
+
+        .seatplan div {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #656565;
+        }
+
+        .seatplan div:last-child {
+            border-bottom: none;
+        }
+
+        .seatplan div span {
+            font-weight: 100;
+            color: #323232;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 20px;
+            color: #ffffff;
+            font-size: 12px;
+            background-color: rgb(70, 76, 80);
+            height: 30px;
+            padding: 30px;
+
+        }
+
+        @media (max-width: 600px) {
+            .seatplan div {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .seatplan div span {
+                margin-bottom: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="KUET Logo" style="margin-right: 40px">
+        <span style="color: #000000; font-weight: 700;">KUET 1st Year Admission Test 2024-25</span>
+    </header>
+    <div class="notice" style="height: 50px; background-color:rgba(35, 142, 105, 0.306); padding-bottom:10px ; position:absolute;">
+        <marquee><p style="color:purple; font-size: 18px;">
+            ::<a href="https://adm.kuet.ac.bd/notice" style="color: red; text-decoration: none;">KUET Admission Result session 2024-2025 has been published.</a> <x style="color:purple; margin-left: 70px;">
+                :: You can reset your password by providing mobile number in reset password option.</x>
+                    
+            </p></marquee>
+
+         </div>
+
+    <div class="container">
+        <div class="title">
+            <h1 style="text-align: left; margin-top: 50px; font-size: 24px;" >SeatPlan <br><x style="color: rgba(106, 170, 130, 0.837); ">____</x> </h1><br><br>
+            
+            <h2  style="text-align: center; background-color: #f9f9f9; height: auto; padding: 20px 20px; border-bottom: 1px solid rgb(218, 218, 218);">KUET 1st YEAR ADMISSION TEST<br> (SESSION- 2024-2025)<br>SEAT PLAN </h2>
+        </div>
+
+        <div class="seatplan">
+            <div><span>Roll:61322</span> </div>
+            <div><span>Application ID: 15230</span> </div>
+            <div><span>Name: NAIM HOSSAIN</span> </div>
+            <div><span>Center:Bangladesh Nouabini School And College, Khulna</span> </div>
+            <div><span>Building: Kazi Nazrul Building</span> </div>
+            <div><span>Room: BNSC_KN-405</span> </div>
+        </div>
+    </div>
+
+    <footer>
+        © 2024 KUET, all right reserved
+    </footer>
+</body>
+</html>
